@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aetrix Foundry — independent Mac software studio</title>
+<meta name="description" content="Aetrix Foundry is an independent Mac software studio. Small, sharp tools for macOS, built one at a time. Home of Duplex.">
+<meta property="og:title" content="Aetrix Foundry">
+<meta property="og:description" content="Independent Mac software studio. Home of Duplex: run a second copy of any Electron app.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aetrixfoundry.com">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='14' fill='%236E5BFF'/%3E%3Crect x='20' y='20' width='24' height='24' rx='7' fill='%23FFFFFF'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #FAFCFE;
+    --ink: #101418;
+    --body-gray: #566470;
+    --hairline: #D6DFE7;
+    --wash-a: #BFE2F3;
+    --wash-b: #EAF5FB;
+    --wash-c: #D4ECF8;
+    --indigo: #6E5BFF;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #fff;
+    border: 1px solid var(--hairline);
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 13px 22px;
+    border-radius: 4px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn:hover { background: #F0F7FB; border-color: #BCCDD9; }
+  .btn .arrow { font-weight: 400; transform: translateY(-1px); }
+
+  /* ---- hero wash ---- */
+  .hero {
+    background:
+      radial-gradient(900px 520px at 82% 30%, var(--wash-c) 0%, transparent 70%),
+      linear-gradient(155deg, var(--wash-a) 0%, var(--wash-b) 58%, var(--wash-a) 100%);
+    position: relative;
+  }
+  .hero-inner {
+    max-width: 1180px; margin: 0 auto;
+    padding: 0 40px 110px;
+  }
+
+  header {
+    max-width: 1180px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 30px 40px 0;
+  }
+  .wordmark { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+  nav { display: flex; gap: 36px; font-size: 15px; color: var(--body-gray); }
+  nav a:hover { color: var(--ink); }
+  header .btn { padding: 11px 20px; }
+
+  h1 {
+    font-size: clamp(52px, 7.2vw, 96px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 600;
+    max-width: 12ch;
+    padding-top: 88px;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(300px, 460px) 1fr;
+    gap: 48px;
+    align-items: end;
+    margin-top: 72px;
+  }
+
+  /* white overlay card, like the reference's "Dental Scan & Care" */
+  .hero-card {
+    background: #fff;
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 28px;
+    display: flex; flex-direction: column; gap: 14px;
+    box-shadow: 0 18px 50px rgba(25, 60, 90, 0.10);
+  }
+  .hero-card .card-head { display: flex; align-items: center; gap: 14px; }
+  .hero-card img { width: 56px; height: 56px; }
+  .hero-card h2 { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
+  .hero-card .ver { font-family: var(--mono); font-size: 12px; color: var(--body-gray); margin-left: 8px; }
+  .hero-card p { color: var(--body-gray); font-size: 15px; }
+  .hero-card .btn { align-self: flex-start; margin-top: 8px; }
+
+  .hero-aside { padding-bottom: 6px; }
+  .hero-icon {
+    display: block;
+    width: min(300px, 34vw);
+    margin: 0 auto 42px;
+    filter: drop-shadow(0 30px 60px rgba(25, 60, 90, 0.30));
+  }
+  .hero-aside p {
+    color: var(--body-gray);
+    font-size: 16.5px;
+    max-width: 44ch;
+    margin-bottom: 22px;
+  }
+
+  /* keep-scrolling notch */
+  .notch-row { position: absolute; left: 0; right: 0; bottom: -1px; display: flex; justify-content: center; }
+  .notch {
+    background: var(--paper);
+    border-radius: 14px 14px 0 0;
+    padding: 12px 34px;
+    font-size: 14.5px;
+    color: var(--body-gray);
+    display: flex; align-items: center; gap: 9px;
+  }
+
+  /* ---- features ---- */
+  .features {
+    max-width: 1180px; margin: 0 auto;
+    padding: 96px 40px 30px;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .feature {
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    background: #fff;
+    padding: 26px;
+  }
+  .feature h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .feature p { color: var(--body-gray); font-size: 14.5px; }
+
+  /* ---- pricing strip ---- */
+  .pricing {
+    max-width: 1180px; margin: 0 auto;
+    padding: 60px 40px 100px;
+    display: flex; flex-wrap: wrap; gap: 24px;
+    align-items: center; justify-content: space-between;
+  }
+  .pricing h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 600; letter-spacing: -0.025em; }
+  .pricing h2 small { display: block; font-size: 16px; font-weight: 400; color: var(--body-gray); letter-spacing: 0; margin-top: 6px; }
+
+  /* ---- footer ---- */
+  footer {
+    border-top: 1px solid var(--hairline);
+  }
+  .footer-inner {
+    max-width: 1180px; margin: 0 auto;
+    padding: 34px 40px 46px;
+    display: flex; flex-wrap: wrap; gap: 12px 32px;
+    align-items: center; justify-content: space-between;
+    font-size: 14px; color: var(--body-gray);
+  }
+  .footer-inner .links { display: flex; gap: 26px; }
+  .footer-inner a:hover { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    header { padding: 22px 22px 0; }
+    nav { display: none; }
+    .hero-inner { padding: 0 22px 96px; }
+    h1 { padding-top: 56px; }
+    .hero-grid { grid-template-columns: 1fr; margin-top: 48px; }
+    .hero-icon { margin: 8px auto 34px; width: 200px; }
+    .features { padding: 72px 22px 16px; }
+    .pricing { padding: 48px 22px 80px; }
+    .footer-inner { padding: 28px 22px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <header>
+    <div class="wordmark">Aetrix Foundry</div>
+    <nav aria-label="Main">
+      <a href="#products">Products</a>
+      <a href="#pricing">Pricing</a>
+      <a href="mailto:dev@aetrixfoundry.com">Contact</a>
+    </nav>
+    <a class="btn" href="https://github.com/bnimit/duplex">Get Duplex <span class="arrow">&rarr;</span></a>
+  </header>
+
+  <div class="hero-inner">
+    <h1>Small Mac tools, built properly.</h1>
+
+    <div class="hero-grid" id="products">
+      <article class="hero-card">
+        <div class="card-head">
+          <img src="assets/duplex-icon.png" alt="Duplex app icon" width="56" height="56">
+          <h2>Duplex <span class="ver">v1.1</span></h2>
+        </div>
+        <p>Run a second copy of any Electron app on your Mac. A second Claude,
+        a second Slack, each with its own login, while the original stays
+        untouched.</p>
+        <a class="btn" href="https://github.com/bnimit/duplex">View on GitHub <span class="arrow">&rarr;</span></a>
+      </article>
+
+      <div class="hero-aside">
+        <img class="hero-icon" src="assets/duplex-icon.png" alt="" aria-hidden="true">
+        <p>Aetrix Foundry is an independent, one-person Mac studio. Each tool is
+        built to do one specific job well and then get out of your way.</p>
+        <a class="btn" href="mailto:dev@aetrixfoundry.com">Write to the studio <span class="arrow">&rarr;</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="notch-row" aria-hidden="true">
+    <div class="notch">Keep scrolling <span>&darr;</span></div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="features-grid">
+    <div class="feature">
+      <h3>A login for every copy</h3>
+      <p>Each instance keeps its own profile, cookies, and settings in an
+      isolated data folder. Two accounts, zero collisions.</p>
+    </div>
+    <div class="feature">
+      <h3>The original stays untouched</h3>
+      <p>Duplex never modifies the target app. Wrappers launch the app's own
+      binary, so updates keep flowing as usual.</p>
+    </div>
+    <div class="feature">
+      <h3>Open source, zero dependencies</h3>
+      <p>Plain Swift you can read in an afternoon. The full source, tests, and
+      build script are on GitHub.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <h2>First instance free.
+    <small>A $5 license unlocks unlimited instances on up to 3 Macs.</small>
+  </h2>
+  <a class="btn" href="https://github.com/bnimit/duplex#readme">How to buy <span class="arrow">&rarr;</span></a>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>&copy; 2026 Aetrix Foundry</div>
+    <div class="links">
+      <a href="mailto:dev@aetrixfoundry.com">dev@aetrixfoundry.com</a>
+      <a href="https://github.com/bnimit">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
