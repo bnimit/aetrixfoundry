@@ -55,8 +55,9 @@
   /* ================= hero ================= */
   .hero {
     background:
-      linear-gradient(rgba(12,10,8,0.42), rgba(12,10,8,0.20) 45%, rgba(12,10,8,0.62)),
-      url("https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2000&auto=format&fit=crop") center 42% / cover no-repeat;
+      radial-gradient(1100px 640px at 12% 108%, rgba(240, 80, 60, 0.34), transparent 65%),
+      radial-gradient(900px 560px at 88% -10%, rgba(110, 91, 255, 0.25), transparent 65%),
+      linear-gradient(180deg, #191714 0%, #131210 100%);
     color: var(--cream);
     display: flex; flex-direction: column;
     min-height: 92vh;
@@ -136,10 +137,31 @@
     gap: 26px; padding-bottom: 90px;
   }
   .shot { position: relative; }
-  .shot .photo {
-    aspect-ratio: 4 / 4.6; object-fit: cover; width: 100%;
+  .shot .tile, .principles .tile {
+    aspect-ratio: 4 / 4.6; width: 100%;
     border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
   }
+  .tile.dark {
+    background:
+      radial-gradient(420px 320px at 30% 110%, rgba(240, 80, 60, 0.22), transparent 70%),
+      linear-gradient(180deg, #1C1A16, #131210);
+  }
+  .tile.dark img { width: 42%; filter: drop-shadow(0 24px 40px rgba(0,0,0,0.5)); }
+  .tile.mold { background: var(--cream-deep); border: 1px solid var(--hairline); }
+  .tile.mold .mold-shape {
+    width: 38%; aspect-ratio: 1; border-radius: 22%;
+    border: 3px dashed #B7B2A4;
+  }
+  .tile.coral { background: var(--coral); }
+  .tile.coral .mark { font-size: clamp(64px, 7vw, 110px); color: var(--cream); line-height: 1; }
+  .cast-col { display: flex; flex-direction: column; gap: 22px; }
+  .cast-col .c {
+    width: 64px; height: 64px; border-radius: 19px;
+  }
+  .cast-col .c1 { border: 3px dashed #4A463D; }
+  .cast-col .c2 { background: linear-gradient(to top, var(--coral) 45%, transparent 45%); border: 2px solid #4A463D; }
+  .cast-col .c3 { background: var(--coral); box-shadow: 0 0 34px rgba(240, 80, 60, 0.5); }
   .shot .datepill {
     position: absolute; right: 14px; top: auto; bottom: 74px;
     background: var(--coral); color: #fff;
@@ -161,7 +183,6 @@
   .prow .num { font-size: 12.5px; color: var(--gray); }
   .prow h3 { font-size: 17px; font-weight: 600; }
   .prow p { font-size: 14.5px; color: var(--gray); margin-top: 8px; max-width: 52ch; }
-  .principles .photo { border-radius: 10px; aspect-ratio: 4/4.4; object-fit: cover; width: 100%; }
 
   /* ================= footer ================= */
   footer { background: var(--dark); color: #CFCBC2; }
@@ -190,7 +211,7 @@
     .hero-top nav { gap: 18px; }
     .hero-mid { padding: 56px 20px 0; }
     .about-grid, .work-head, .principles { grid-template-columns: 1fr; gap: 28px; }
-    .principles .photo { order: -1; }
+    .principles .tile { order: -1; }
     .foot-giant, .hero-bottom .giant { white-space: normal; }
   }
 </style>
@@ -270,19 +291,19 @@
     </div>
     <div class="work-grid">
       <a class="shot" href="https://github.com/bnimit/duplex">
-        <img class="photo" src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=1200&auto=format&fit=crop" alt="Code on a laptop screen">
+        <div class="tile dark"><img src="assets/duplex-icon.png" alt="Duplex app icon"></div>
         <span class="datepill">v1.1 &#183; $5</span>
         <h3>Duplex</h3>
         <p class="micro">Run a second copy of any Electron app, with its own login.</p>
       </a>
       <div class="shot">
-        <img class="photo" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop" alt="Dark code editor on a screen">
+        <div class="tile mold"><div class="mold-shape" aria-hidden="true"></div></div>
         <span class="datepill">On the bench</span>
         <h3>Next casting</h3>
         <p class="micro">The next tool is in progress. One at a time.</p>
       </div>
       <a class="shot" href="mailto:dev@aetrixfoundry.com?subject=Tool%20idea">
-        <img class="photo" src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=1200&auto=format&fit=crop" alt="Clean desk with an iMac">
+        <div class="tile coral"><span class="mark" aria-hidden="true">&#10033;</span></div>
         <span class="datepill">Your itch?</span>
         <h3>Suggest a tool</h3>
         <p class="micro">Tell us the small Mac problem you hit every day.</p>
@@ -322,7 +343,13 @@
       </div>
     </div>
   </div>
-  <img class="photo" src="https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?q=80&w=1200&auto=format&fit=crop" alt="Keyboard close-up in low light">
+  <div class="tile dark" aria-hidden="true">
+    <div class="cast-col">
+      <div class="c c1"></div>
+      <div class="c c2"></div>
+      <div class="c c3"></div>
+    </div>
+  </div>
 </section>
 
 <footer>
