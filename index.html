@@ -54,13 +54,48 @@
 
   /* ================= hero ================= */
   .hero {
-    background:
-      radial-gradient(1100px 640px at 12% 108%, rgba(240, 80, 60, 0.34), transparent 65%),
-      radial-gradient(900px 560px at 88% -10%, rgba(110, 91, 255, 0.25), transparent 65%),
-      linear-gradient(180deg, #191714 0%, #131210 100%);
+    background: linear-gradient(180deg, #191714 0%, #131210 100%);
     color: var(--cream);
     display: flex; flex-direction: column;
     min-height: 92vh;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  /* Ambient forge glow: two slow-breathing orbs, molten coral low and
+     indigo high, like metal cooling. Stilled under reduced motion. */
+  .hero::before, .hero::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .hero::before {
+    width: 62vw; height: 46vh;
+    left: -8vw; bottom: -18vh;
+    background: radial-gradient(closest-side, rgba(240, 80, 60, 0.42), transparent);
+    animation: breathe-coral 14s ease-in-out infinite alternate;
+  }
+  .hero::after {
+    width: 48vw; height: 40vh;
+    right: -6vw; top: -14vh;
+    background: radial-gradient(closest-side, rgba(110, 91, 255, 0.32), transparent);
+    animation: breathe-indigo 19s ease-in-out infinite alternate;
+  }
+  @keyframes breathe-coral {
+    from { transform: translate(0, 0) scale(1); opacity: 0.72; }
+    50%  { opacity: 1; }
+    to   { transform: translate(7vw, -5vh) scale(1.18); opacity: 0.85; }
+  }
+  @keyframes breathe-indigo {
+    from { transform: translate(0, 0) scale(1.1); opacity: 0.9; }
+    50%  { opacity: 0.6; }
+    to   { transform: translate(-6vw, 6vh) scale(1); opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero::before, .hero::after { animation: none; }
   }
   .hero-top {
     display: flex; align-items: center; justify-content: space-between;
