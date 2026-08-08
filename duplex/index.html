@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duplex — run a second copy of any Electron app on your Mac</title>
+<meta name="description" content="Duplex clones Claude, Slack, Discord, or any Electron app into lightweight wrappers, each with its own login, settings, and Dock icon. Native Swift, notarized, first instance free.">
+<meta property="og:title" content="Duplex">
+<meta property="og:description" content="Run a second copy of any Electron app on your Mac, each with its own login. First instance free.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aetrixfoundry.com/duplex">
+<meta property="og:image" content="https://aetrixfoundry.com/assets/duplex-icon.png">
+<link rel="icon" href="../assets/duplex-icon.png">
+<style>
+  :root {
+    --cream: #EFECE5;
+    --cream-deep: #E6E2D8;
+    --ink: #141310;
+    --gray: #6B675E;
+    --coral: #F0503C;
+    --hairline: #D8D4C9;
+    --dark: #131210;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--cream); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
+  img { display: block; max-width: 100%; }
+
+  .shell { max-width: 1000px; margin: 0 auto; padding: 0 32px; }
+
+  .eyebrow {
+    font-size: 11.5px; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--coral);
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--ink); color: var(--cream);
+    font-size: 14px; font-weight: 500;
+    padding: 9px 9px 9px 20px; border-radius: 999px;
+    transition: transform 0.15s ease;
+  }
+  .pill:hover { transform: translateY(-1px); }
+  .pill .circ {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--coral); color: var(--ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+  .pill.ghost { background: none; border: 1px solid var(--hairline); color: var(--ink); padding: 8px 19px; }
+
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 26px 0 0; font-size: 13.5px;
+  }
+  header .wordmark { font-weight: 600; }
+  header nav { display: flex; gap: 26px; color: var(--gray); }
+  header nav a:hover { color: var(--ink); }
+
+  /* hero */
+  .hero { padding: 74px 0 60px; display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: center; }
+  .hero h1 {
+    font-size: clamp(36px, 5.4vw, 58px);
+    font-weight: 650; letter-spacing: -0.03em; line-height: 1.06;
+    margin: 14px 0 18px; max-width: 15ch;
+  }
+  .hero p.lead { color: var(--gray); font-size: 17.5px; max-width: 46ch; }
+  .hero .actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 26px; }
+  .hero-tile {
+    aspect-ratio: 1; border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    background:
+      radial-gradient(340px 260px at 28% 108%, rgba(240, 80, 60, 0.28), transparent 70%),
+      linear-gradient(180deg, #1C1A16, #131210);
+  }
+  .hero-tile img { width: 56%; filter: drop-shadow(0 26px 44px rgba(0,0,0,0.5)); }
+
+  /* install */
+  .install { background: var(--dark); color: #CFCBC2; border-radius: 20px; padding: 36px; margin: 26px 0 0; }
+  .install .eyebrow { color: var(--coral); }
+  .install h2 { color: var(--cream); font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 10px 0 18px; }
+  .install pre {
+    background: #1D1B17; border: 1px solid #2A2822; border-radius: 10px;
+    padding: 18px 20px; font-family: var(--mono); font-size: 14px; line-height: 1.9;
+    color: var(--cream); overflow-x: auto;
+  }
+  .install .note { font-size: 13px; color: #8F8B80; margin-top: 14px; }
+  .install .note a { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* how it works cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; padding: 64px 0 10px; }
+  .card { background: #fff; border: 1px solid var(--hairline); border-radius: 12px; padding: 24px; }
+  .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--gray); }
+
+  /* pricing */
+  .pricing {
+    margin: 64px 0 90px; border: 1px solid var(--hairline); border-radius: 20px;
+    background: var(--cream-deep);
+    padding: 40px; display: flex; flex-wrap: wrap; gap: 26px;
+    align-items: center; justify-content: space-between;
+  }
+  .pricing h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 600; letter-spacing: -0.02em; }
+  .pricing h2 small { display: block; font-size: 15px; font-weight: 400; color: var(--gray); margin-top: 8px; max-width: 44ch; }
+  .pricing .soon {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray); border: 1px dashed var(--hairline); border-radius: 999px; padding: 6px 14px;
+  }
+
+  footer { border-top: 1px solid var(--hairline); padding: 26px 0 40px; display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; font-size: 13.5px; color: var(--gray); }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; padding-top: 48px; }
+    .hero-tile { max-width: 240px; order: -1; }
+    .pricing { padding: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header>
+    <a class="wordmark" href="/">Aetrix Foundry</a>
+    <nav>
+      <a href="#install">Install</a>
+      <a href="#pricing">Pricing</a>
+      <a href="https://github.com/bnimit/duplex">GitHub</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Duplex for macOS</div>
+      <h1>Run a second copy of any Electron app.</h1>
+      <p class="lead">A second Claude, a second Slack, a second Discord, each with
+      its own login, settings, and Dock icon. The original app stays untouched
+      and keeps updating itself.</p>
+      <div class="actions">
+        <a class="pill" href="#install">Install free <span class="circ">&darr;</span></a>
+        <a class="pill ghost" href="https://github.com/bnimit/duplex">View the source</a>
+      </div>
+    </div>
+    <div class="hero-tile" aria-hidden="true">
+      <img src="../assets/duplex-icon.png" alt="">
+    </div>
+  </section>
+
+  <section class="install" id="install">
+    <div class="eyebrow">Install</div>
+    <h2>Three lines, no Gatekeeper warnings.</h2>
+    <pre>brew tap bnimit/tap
+brew trust bnimit/tap
+brew install --cask duplex</pre>
+    <p class="note">brew trust is a one-time step Homebrew asks for on
+    third-party taps. Prefer a direct download? Grab the notarized zip from the
+    <a href="https://github.com/bnimit/duplex/releases/latest">latest release</a>.
+    Requires macOS 13 or later.</p>
+  </section>
+
+  <section class="cards">
+    <div class="card">
+      <h3>A login for every copy</h3>
+      <p>Each instance keeps its profile, cookies, and settings in an isolated
+      data folder. Two accounts, zero collisions.</p>
+    </div>
+    <div class="card">
+      <h3>The original stays untouched</h3>
+      <p>Wrappers launch the app's own binary with an isolated profile. No
+      patching, no re-signing, updates keep flowing.</p>
+    </div>
+    <div class="card">
+      <h3>Logins that actually work</h3>
+      <p>OAuth callbacks route to one app on macOS. Duplex's link routing sends
+      them to the instance you are signing in to.</p>
+    </div>
+    <div class="card">
+      <h3>Small and inspectable</h3>
+      <p>Native Swift, zero dependencies, notarized by Apple. The source is
+      public on GitHub under a source-available license.</p>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <h2>First instance free, forever.
+      <small>A $5 license unlocks unlimited instances on up to 2 Macs. Pay
+      once, own it, no subscription.</small>
+    </h2>
+    <span class="soon">$5 checkout opening soon</span>
+  </section>
+
+  <footer>
+    <div>&copy; 2026 <a href="/">Aetrix Foundry</a></div>
+    <div><a href="mailto:dev@aetrixfoundry.com">dev@aetrixfoundry.com</a></div>
+  </footer>
+
+</div>
+</body>
+</html>
