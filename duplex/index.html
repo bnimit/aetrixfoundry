@@ -170,13 +170,15 @@ brew install --cask duplex</pre>
     </div>
     <div class="card">
       <h3>The original stays untouched</h3>
-      <p>Wrappers launch the app's own binary with an isolated profile. No
-      patching, no re-signing, updates keep flowing.</p>
+      <p>Each instance is a copy-on-write clone of the app with its own
+      identity. The original is never modified, keeps updating itself, and
+      instances follow its updates.</p>
     </div>
     <div class="card">
       <h3>Logins that actually work</h3>
-      <p>OAuth callbacks route to one app on macOS. Duplex's link routing sends
-      them to the instance you are signing in to.</p>
+      <p>macOS sees every instance as a separate app, so the original opens
+      from the Dock while instances run, and Duplex's link routing sends OAuth
+      callbacks to the instance you are signing in to.</p>
     </div>
     <div class="card">
       <h3>Small and inspectable</h3>
