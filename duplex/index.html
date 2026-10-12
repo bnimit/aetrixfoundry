@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Duplex: run a second copy of any Electron app on your Mac</title>
-<meta name="description" content="Duplex clones Claude, Slack, Discord, or any Electron app into lightweight wrappers, each with its own login, settings, and Dock icon. Native Swift, notarized, first instance free.">
+<title>Duplex: run two copies of an app on your Mac, each with its own account</title>
+<meta name="description" content="Run multiple accounts on your Mac: a second Claude, Slack, or Discord app, each with its own login, settings, and Dock icon. Native Swift, notarized, first instance free.">
+<link rel="canonical" href="https://aetrixfoundry.com/duplex/">
 <meta property="og:title" content="Duplex">
-<meta property="og:description" content="Run a second copy of any Electron app on your Mac, each with its own login. First instance free.">
+<meta property="og:description" content="Run a second copy of Claude, Slack, Discord, or any Electron app on your Mac, each with its own login. First instance free.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://aetrixfoundry.com/duplex">
+<meta property="og:url" content="https://aetrixfoundry.com/duplex/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Duplex", "operatingSystem": "macOS 13 or later", "applicationCategory": "UtilitiesApplication", "description": "Run a second copy of Claude, Slack, Discord, or any Electron app on your Mac, each with its own login, settings, and Dock icon.", "url": "https://aetrixfoundry.com/duplex/", "downloadUrl": "https://github.com/bnimit/duplex/releases/latest", "publisher": {"@type": "Organization", "name": "Aetrix Foundry", "url": "https://aetrixfoundry.com/"}, "offers": [{"@type": "Offer", "name": "First instance", "price": "0", "priceCurrency": "USD"}, {"@type": "Offer", "name": "Unlimited instances license", "price": "9", "priceCurrency": "USD"}]}</script>
 <meta property="og:image" content="https://aetrixfoundry.com/assets/duplex-icon.png">
 <link rel="icon" href="../assets/duplex-icon.png">
 <style>
@@ -95,6 +97,18 @@
   .card { background: #fff; border: 1px solid var(--hairline); border-radius: 12px; padding: 24px; }
   .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
   .card p { font-size: 14px; color: var(--gray); }
+
+  /* guides */
+  .guides { padding: 54px 0 0; }
+  .guides h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 10px 0 16px; }
+  .guides ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 12px; }
+  .guides a {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    background: #fff; border: 1px solid var(--hairline); border-radius: 12px;
+    padding: 16px 20px; font-size: 15px; font-weight: 500;
+  }
+  .guides a span { color: var(--coral); }
+  .guides a:hover { border-color: var(--ink); }
 
   /* pricing */
   .pricing {
@@ -185,6 +199,17 @@ brew install --cask duplex</pre>
       <p>Native Swift, zero dependencies, notarized by Apple. The source is
       public on GitHub under a source-available license.</p>
     </div>
+  </section>
+
+  <section class="guides" id="guides">
+    <div class="eyebrow">Guides</div>
+    <h2>Two accounts, one Mac</h2>
+    <ul>
+      <li><a href="/duplex/two-claude-accounts-mac/">Use two Claude accounts at the same time <span>&rarr;</span></a></li>
+      <li><a href="/duplex/two-slack-accounts-mac/">Run two Slack accounts side by side <span>&rarr;</span></a></li>
+      <li><a href="/duplex/two-discord-accounts-mac/">Use two Discord accounts at the same time <span>&rarr;</span></a></li>
+      <li><a href="/duplex/run-multiple-instances-mac/">Run two copies of any app on a Mac <span>&rarr;</span></a></li>
+    </ul>
   </section>
 
   <section class="pricing" id="pricing">

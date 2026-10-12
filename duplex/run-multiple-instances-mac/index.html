@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Run Two Copies of the Same App on a Mac (Multiple Accounts) | Duplex</title>
+<meta name="description" content="macOS only opens one copy of each app. Here is why, a free Terminal workaround, and how to run a second copy of Slack, Claude, Discord and other apps with its own login and Dock icon.">
+<link rel="canonical" href="https://aetrixfoundry.com/duplex/run-multiple-instances-mac/">
+<meta property="og:title" content="How to run two copies of the same app on a Mac">
+<meta property="og:description" content="macOS only opens one copy of each app. Here is why, a free Terminal workaround, and how to run a second copy of Slack, Claude, Discord and other apps with its own login and Dock icon.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://aetrixfoundry.com/duplex/run-multiple-instances-mac/">
+<meta property="og:image" content="https://aetrixfoundry.com/assets/duplex-icon.png">
+<link rel="icon" href="/assets/duplex-icon.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Aetrix Foundry", "item": "https://aetrixfoundry.com/"}, {"@type": "ListItem", "position": 2, "name": "Duplex", "item": "https://aetrixfoundry.com/duplex/"}, {"@type": "ListItem", "position": 3, "name": "Run multiple instances", "item": "https://aetrixfoundry.com/duplex/run-multiple-instances-mac/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I run two instances of any Mac app?", "acceptedAnswer": {"@type": "Answer", "text": "Only Electron apps, which include Slack, Claude, Discord, Signal, Notion, Obsidian, and VS Code. Native apps such as Safari or Messages can't be run twice with separate logins. Duplex tells you when you pick an app it can't duplicate."}}, {"@type": "Question", "name": "Why does open -n not give me a second account?", "acceptedAnswer": {"@type": "Answer", "text": "open -n starts a second process, but Electron apps lock their profile folder, so the second copy either quits or shares the same login. You also need --user-data-dir pointing at a separate folder, and even then sign-in links may go to the wrong copy."}}, {"@type": "Question", "name": "Does a second copy take up double the disk space?", "acceptedAnswer": {"@type": "Answer", "text": "No. Duplex makes a copy-on-write clone, which shares its disk blocks with the original. Finder shows the full app size, but a Claude instance costs about 6 MB of real disk."}}, {"@type": "Question", "name": "Does Duplex change the original app?", "acceptedAnswer": {"@type": "Answer", "text": "No. The original is never modified and keeps updating itself. Each instance follows its updates automatically the next time you launch it."}}, {"@type": "Question", "name": "Is Duplex free?", "acceptedAnswer": {"@type": "Answer", "text": "Your first instance is free, forever, which is all you need for a second account. A $9 one-time license unlocks unlimited instances on up to 2 Macs. There is no subscription."}}, {"@type": "Question", "name": "Is it safe?", "acceptedAnswer": {"@type": "Answer", "text": "Duplex is native Swift, notarized by Apple, and collects no analytics. The source is public on GitHub, so you can read exactly what it does."}}]}</script>
+<style>
+  :root {
+    --cream: #EFECE5; --cream-deep: #E6E2D8; --ink: #141310; --gray: #6B675E;
+    --coral: #F0503C; --hairline: #D8D4C9; --dark: #131210;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
+  .shell { max-width: 760px; margin: 0 auto; padding: 0 28px; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 26px 0 0; font-size: 13.5px; }
+  header .wordmark { font-weight: 600; }
+  header nav { display: flex; gap: 22px; color: var(--gray); }
+  header nav a:hover { color: var(--ink); }
+  .crumbs { font-size: 13px; color: var(--gray); margin: 44px 0 0; }
+  .crumbs a:hover { color: var(--ink); }
+  .eyebrow { font-size: 11.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--coral); margin-top: 22px; }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 650; letter-spacing: -0.025em; line-height: 1.1; margin: 12px 0 16px; }
+  .lead { font-size: 18px; color: var(--gray); }
+  .updated { font-size: 13px; color: var(--gray); margin-top: 14px; }
+  article h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.015em; margin: 44px 0 12px; }
+  article h3 { font-size: 17px; font-weight: 600; margin: 24px 0 8px; }
+  article p, article li { color: #2C2A26; margin-bottom: 12px; }
+  article ol, article ul { padding-left: 22px; }
+  article a { color: var(--coral); }
+  article a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  article code { font-family: var(--mono); font-size: 0.88em; background: var(--cream-deep); border-radius: 5px; padding: 1px 6px; }
+  article pre { background: var(--dark); color: var(--cream); border-radius: 10px; padding: 16px 18px; font-family: var(--mono); font-size: 13.5px; line-height: 1.8; overflow-x: auto; margin: 4px 0 16px; }
+  .cta { background: var(--dark); color: #CFCBC2; border-radius: 18px; padding: 30px; margin: 40px 0; }
+  .cta h2 { color: var(--cream); font-size: 21px; font-weight: 600; letter-spacing: -0.015em; margin: 0 0 8px; }
+  .cta p { color: #CFCBC2; margin: 0 0 16px; }
+  .cta pre { background: #1D1B17; border: 1px solid #2A2822; margin: 0 0 18px; }
+  .cta .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .pill { display: inline-flex; align-items: center; gap: 10px; background: var(--cream); color: var(--ink); font-size: 14px; font-weight: 500; padding: 9px 9px 9px 20px; border-radius: 999px; }
+  .pill .circ { width: 26px; height: 26px; border-radius: 50%; background: var(--coral); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; }
+  .pill.ghost { background: none; border: 1px solid #3A372F; color: var(--cream); padding: 8px 19px; }
+  .faq h3 { margin-top: 22px; }
+  .related { border-top: 1px solid var(--hairline); margin-top: 48px; padding-top: 24px; }
+  .related h2 { font-size: 15px; font-weight: 600; margin: 0 0 12px; }
+  .related ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+  .related a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--hairline); text-underline-offset: 4px; }
+  .related a:hover { text-decoration-color: var(--coral); }
+  footer { border-top: 1px solid var(--hairline); margin-top: 48px; padding: 26px 0 40px; display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; font-size: 13.5px; color: var(--gray); }
+  footer a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header>
+    <a class="wordmark" href="/">Aetrix Foundry</a>
+    <nav>
+      <a href="/duplex/">Duplex</a>
+      <a href="/duplex/#install">Install</a>
+      <a href="https://github.com/bnimit/duplex">GitHub</a>
+    </nav>
+  </header>
+
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/duplex/">Duplex</a> / Guides</nav>
+  <div class="eyebrow">Guide</div>
+  <h1>How to run two copies of the same app on a Mac</h1>
+  <p class="lead">macOS opens one copy of each app, so you can't be signed in to two accounts at once. Here is why that happens, a free workaround in Terminal, and a one-click way to get a second copy with its own login and Dock icon.</p>
+  <p class="updated">Updated October 2026</p>
+
+  <article>
+
+    <h2>Why your Mac won't open a second copy</h2>
+    <p>When you open an app that is already running, macOS brings the existing window to the front instead of starting a new copy. Most chat and AI apps on the Mac, including Slack, Claude, and Discord, are built on Electron, which adds a second lock: the app keeps one profile folder with your login in it, and refuses to start twice on the same folder.</p>
+    <p>So even if you force macOS to launch a second copy, it usually just focuses the first window, still signed in to the same account.</p>
+
+    <h2>The free workaround: Terminal</h2>
+    <p>For Electron apps you can start a second copy by hand and point it at a separate profile folder. For example, for Slack:</p>
+    <pre>open -n -a "Slack" --args --user-data-dir="$HOME/Library/Application Support/Slack-2"</pre>
+    <p>This works for many apps, with some catches:</p>
+    <ul>
+      <li>You have to run the command every time you want the second copy.</li>
+      <li>Both copies have the same name and icon in the Dock, so it's hard to tell them apart.</li>
+      <li>Sign-in links that come back from your browser (for example "Sign in with Google") go to whichever copy macOS picks, often the wrong one, so logging in can fail.</li>
+      <li>Both copies share notification and permission settings, because macOS sees them as the same app.</li>
+    </ul>
+
+    <h2>The one-click way: Duplex</h2>
+    <p><a href="/duplex/">Duplex</a> is a small Mac app that does this properly. It makes a lightweight clone of the app with its own identity, so macOS treats it as a separate app.</p>
+    <ol>
+      <li><strong>Install Duplex</strong> with Homebrew or the notarized download below.</li>
+      <li><strong>Click "New Instance…"</strong> and pick the app from your Applications folder.</li>
+      <li><strong>Name it</strong>, for example "Slack Work", and choose an icon. A colored badge makes it easy to tell apart in the Dock.</li>
+      <li><strong>Launch it</strong> and sign in to your second account. It opens from the Dock or Applications like any other app from then on.</li>
+    </ol>
+    <p>Each copy keeps its own login, cookies, and settings. The original app stays untouched, keeps updating itself, and your instances follow its updates automatically.</p>
+
+    <h2>Which apps work</h2>
+    <p>Duplex works with Electron apps, which covers most desktop chat, AI, and productivity apps on the Mac, such as:</p>
+    <ul>
+      <li><a href="/duplex/two-claude-accounts-mac/">Claude</a></li>
+      <li><a href="/duplex/two-slack-accounts-mac/">Slack</a></li>
+      <li><a href="/duplex/two-discord-accounts-mac/">Discord</a></li>
+      <li>Signal, Notion, Obsidian, VS Code, Cursor, and many more</li>
+    </ul>
+    <p>Duplex checks the app when you pick it and tells you if it isn't supported. Native Mac apps such as Safari, Messages, or WhatsApp can't be duplicated this way, and Mac App Store versions of apps aren't supported, so download the app from its developer's website instead.</p>
+
+
+  <section class="cta">
+    <h2>Get Duplex</h2>
+    <p>Your first instance is free, forever. A $9 one-time license unlocks unlimited instances on up to 2 Macs. Requires macOS 13 or later.</p>
+    <pre>brew tap bnimit/tap
+brew trust bnimit/tap
+brew install --cask duplex</pre>
+    <div class="actions">
+      <a class="pill" href="/duplex/#install">Install free <span class="circ">&rarr;</span></a>
+      <a class="pill ghost" href="https://github.com/bnimit/duplex/releases/latest">Download the notarized zip</a>
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2>Questions</h2>
+    <h3>Can I run two instances of any Mac app?</h3>
+    <p>Only Electron apps, which include Slack, Claude, Discord, Signal, Notion, Obsidian, and VS Code. Native apps such as Safari or Messages can't be run twice with separate logins. Duplex tells you when you pick an app it can't duplicate.</p>
+    <h3>Why does open -n not give me a second account?</h3>
+    <p><code>open -n</code> starts a second process, but Electron apps lock their profile folder, so the second copy either quits or shares the same login. You also need <code>--user-data-dir</code> pointing at a separate folder, and even then sign-in links may go to the wrong copy.</p>
+    <h3>Does a second copy take up double the disk space?</h3>
+    <p>No. Duplex makes a copy-on-write clone, which shares its disk blocks with the original. Finder shows the full app size, but a Claude instance costs about 6 MB of real disk.</p>
+    <h3>Does Duplex change the original app?</h3>
+    <p>No. The original is never modified and keeps updating itself. Each instance follows its updates automatically the next time you launch it.</p>
+    <h3>Is Duplex free?</h3>
+    <p>Your first instance is free, forever, which is all you need for a second account. A $9 one-time license unlocks unlimited instances on up to 2 Macs. There is no subscription.</p>
+    <h3>Is it safe?</h3>
+    <p>Duplex is native Swift, notarized by Apple, and collects no analytics. The source is public on <a href="https://github.com/bnimit/duplex">GitHub</a>, so you can read exactly what it does.</p>
+  </section>
+  </article>
+
+  <section class="related">
+    <h2>More guides</h2>
+    <ul>
+      <li><a href="/duplex/two-claude-accounts-mac/">Use two Claude accounts on a Mac at the same time</a></li>
+      <li><a href="/duplex/two-slack-accounts-mac/">Run two Slack accounts side by side on a Mac</a></li>
+      <li><a href="/duplex/two-discord-accounts-mac/">Use two Discord accounts on a Mac at the same time</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <div>&copy; 2026 <a href="/">Aetrix Foundry</a></div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="mailto:dev@aetrixfoundry.com">dev@aetrixfoundry.com</a>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
