@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Duplex: run two copies of an app on your Mac, each with its own account</title>
-<meta name="description" content="Run multiple accounts on your Mac: a second Claude, Slack, or Discord app, each with its own login, settings, and Dock icon. Native Swift, notarized, first instance free.">
+<meta name="description" content="Run multiple accounts on your Mac: a second Claude, Codex, Slack, or Discord app, each with its own login, settings, and Dock icon. Native Swift, notarized, first instance free.">
 <link rel="canonical" href="https://aetrixfoundry.com/duplex/">
 <meta property="og:title" content="Duplex">
 <meta property="og:description" content="Run a second copy of Claude, Slack, Discord, or any Electron app on your Mac, each with its own login. First instance free.">
@@ -108,6 +108,7 @@
     padding: 16px 20px; font-size: 15px; font-weight: 500;
   }
   .guides a span { color: var(--coral); }
+  .guides li:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .guides a:hover { border-color: var(--ink); }
 
   /* pricing */
@@ -150,7 +151,7 @@
     <div>
       <div class="eyebrow">Duplex for macOS</div>
       <h1>Run a second copy of any Electron app.</h1>
-      <p class="lead">A second Claude, a second Slack, a second Discord, each with
+      <p class="lead">A second Claude, a second Codex, a second Slack, each with
       its own login, settings, and Dock icon. The original app stays untouched
       and keeps updating itself.</p>
       <div class="actions">
@@ -208,6 +209,7 @@ brew install --cask duplex</pre>
       <li><a href="/duplex/two-claude-accounts-mac/">Use two Claude accounts at the same time <span>&rarr;</span></a></li>
       <li><a href="/duplex/two-slack-accounts-mac/">Run two Slack accounts side by side <span>&rarr;</span></a></li>
       <li><a href="/duplex/two-discord-accounts-mac/">Use two Discord accounts at the same time <span>&rarr;</span></a></li>
+      <li><a href="/duplex/two-codex-accounts-mac/">Use two Codex accounts at the same time <span>&rarr;</span></a></li>
       <li><a href="/duplex/run-multiple-instances-mac/">Run two copies of any app on a Mac <span>&rarr;</span></a></li>
     </ul>
   </section>
