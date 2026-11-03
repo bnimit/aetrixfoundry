@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aetrix Foundry: independent Mac software studio</title>
-<meta name="description" content="Aetrix Foundry is an independent Mac software studio. Small, sharp tools for macOS, built one at a time. Home of Duplex.">
+<meta name="description" content="Aetrix Foundry is an independent Mac software studio. Small, sharp tools for macOS, built one at a time. Home of Duplex and Orlo.">
 <link rel="canonical" href="https://aetrixfoundry.com/">
 <meta property="og:title" content="Aetrix Foundry">
-<meta property="og:description" content="Independent Mac software studio. Home of Duplex: run a second copy of any Electron app.">
+<meta property="og:description" content="Independent Mac software studio. Makers of Duplex, a second copy of any Mac app, and Orlo, a native mail client with no AI.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aetrixfoundry.com">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='14' fill='%23F0503C'/%3E%3Crect x='20' y='20' width='24' height='24' rx='7' fill='%23EFECE5'/%3E%3C/svg%3E">
@@ -130,7 +130,6 @@
   }
   .stat { margin-top: 26px; }
   .stat .big { font-size: 74px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
-  .stat .big sup { color: var(--coral); font-size: 40px; }
   .stat .micro { margin-top: 10px; max-width: 20ch; }
   .about-grid h2 {
     font-size: clamp(26px, 3.4vw, 40px);
@@ -158,6 +157,7 @@
   .card.tint .chip { background: var(--coral); color: #fff; border-color: var(--coral); }
   .card h3 { font-size: 17px; font-weight: 600; margin-bottom: 12px; }
   .card p { font-size: 14.5px; color: var(--gray); margin-bottom: 20px; }
+  .card p:last-child { margin-bottom: 0; }
   .card a { font-size: 13.5px; font-weight: 550; text-decoration: underline; text-underline-offset: 4px; }
 
   /* ================= statement + work ================= */
@@ -184,6 +184,11 @@
       linear-gradient(180deg, #1C1A16, #131210);
   }
   .tile.dark img { width: 42%; filter: drop-shadow(0 24px 40px rgba(0,0,0,0.5)); }
+  .tile.dark.indigo {
+    background:
+      radial-gradient(420px 320px at 30% 110%, rgba(110, 91, 255, 0.30), transparent 70%),
+      linear-gradient(180deg, #1A1826, #121120);
+  }
   .tile.mold { background: var(--cream-deep); border: 1px solid var(--hairline); }
   .tile.mold .mold-shape {
     width: 38%; aspect-ratio: 1; border-radius: 22%;
@@ -204,6 +209,7 @@
     font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
     border-radius: 999px; padding: 5px 12px;
   }
+  .shot .datepill.indigo { background: #6E5BFF; }
   .shot h3 { font-size: 16.5px; font-weight: 600; margin-top: 14px; }
   .shot .micro { margin-top: 3px; }
 
@@ -282,8 +288,8 @@
     <div>
       <div class="eyebrow">About Aetrix</div>
       <div class="stat">
-        <div class="big">2<sup>&#215;</sup></div>
-        <p class="micro">run two of every app on one Mac, each with its own login.</p>
+        <div class="big">2</div>
+        <p class="micro">tools on the bench, each doing one job completely.</p>
       </div>
     </div>
     <div>
@@ -297,27 +303,24 @@
   </div>
 </section>
 
-<section class="shell cards" id="products">
+<section class="shell cards" id="approach">
   <div class="card">
-    <div class="chip">&#9679;&#9679;</div>
-    <h3>A login for every copy</h3>
-    <p>Each Duplex instance keeps its own profile, cookies, and settings in an
-    isolated data folder. Two accounts, zero collisions.</p>
-    <a href="https://github.com/bnimit/duplex#how-it-works">Learn more</a>
+    <div class="chip">&#9670;</div>
+    <h3>Native, not a wrapper</h3>
+    <p>Swift and Rust on Apple's own frameworks. These are Mac apps, not web
+    pages in a window, and they behave like it.</p>
   </div>
   <div class="card tint">
-    <div class="chip">&#10022;</div>
-    <h3>The original stays untouched</h3>
-    <p>Duplex never modifies the target app. Wrappers launch the app's own
-    binary, so updates keep flowing exactly as before.</p>
-    <a href="https://github.com/bnimit/duplex#how-it-works">Learn more</a>
+    <div class="chip">&#9679;&#9679;</div>
+    <h3>Your data stays on your Mac</h3>
+    <p>There is no account to make with us. Duplex keeps every instance in a
+    local folder; Orlo keeps your mail in SQLite on your own disk.</p>
   </div>
   <div class="card">
-    <div class="chip">&#9997;</div>
-    <h3>Source available</h3>
-    <p>Read the code, audit it, build it for yourself. The full source, tests,
-    and build script are public on GitHub.</p>
-    <a href="https://github.com/bnimit/duplex/blob/main/LICENSE">Read the license</a>
+    <div class="chip">&#10022;</div>
+    <h3>Works with what you already have</h3>
+    <p>Nothing to migrate onto. Duplex wraps the apps you already installed;
+    Orlo connects to the mailboxes you already use.</p>
   </div>
 </section>
 
@@ -335,12 +338,12 @@
         <h3>Duplex</h3>
         <p class="micro">Run a second copy of any Electron app, with its own login.</p>
       </a>
-      <div class="shot">
-        <div class="tile mold"><div class="mold-shape" aria-hidden="true"></div></div>
-        <span class="datepill">On the bench</span>
-        <h3>Next casting</h3>
-        <p class="micro">The next tool is in progress. One at a time.</p>
-      </div>
+      <a class="shot" href="https://orlo.email">
+        <div class="tile dark indigo"><img src="assets/orlo-icon.png" alt="Orlo app icon"></div>
+        <span class="datepill indigo">macOS &#183; early access</span>
+        <h3>Orlo</h3>
+        <p class="micro">A native Mac mail client, no AI, for the accounts you already have.</p>
+      </a>
       <a class="shot" href="mailto:dev@aetrixfoundry.com?subject=Tool%20idea">
         <div class="tile coral"><span class="mark" aria-hidden="true">&#10033;</span></div>
         <span class="datepill">Your itch?</span>
@@ -361,23 +364,26 @@
         <div>
           <h3>Ship small</h3>
           <p>A tool should do one job completely rather than ten jobs halfway.
-          Duplex duplicates apps. That is the whole job.</p>
+          Duplex duplicates apps. Orlo sorts mail by who is waiting. Each of
+          those is a whole job.</p>
         </div>
       </div>
       <div class="prow">
         <span class="num">(02)</span>
         <div>
-          <h3>Zero dependencies</h3>
-          <p>Plain Swift on native frameworks. Nothing to vendor, nothing to
-          rot, nothing phoning home.</p>
+          <h3>No AI in the way</h3>
+          <p>Neither tool ships an assistant, a summary you did not ask for, or
+          a model reading your data. Nothing we build needs to understand your
+          content in order to work.</p>
         </div>
       </div>
       <div class="prow">
         <span class="num">(03)</span>
         <div>
-          <h3>Pay once, own it</h3>
-          <p>A $9 license, unlimited instances, up to 2 Macs. The first
-          instance is free forever, no trial clocks.</p>
+          <h3>Honest pricing</h3>
+          <p>Duplex is $9 once, and its first instance stays free. Orlo Pro is
+          $5.99 a month, free while it is in early access. No countdown timers,
+          no nag screens, no upsell modals.</p>
         </div>
       </div>
     </div>
@@ -400,7 +406,8 @@
       </div>
       <div>
         <div class="label">(Navigation)</div>
-        <a href="#work">Products</a><br>
+        <a href="/duplex">Duplex</a><br>
+        <a href="https://orlo.email">Orlo</a><br>
         <a href="#principles">Principles</a><br>
         <a href="https://github.com/bnimit">GitHub</a>
       </div>
